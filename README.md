@@ -1,6 +1,6 @@
-# 📱 Biblioteca+ Mobile
+# BibliotecaPlus App
 
-Aplicativo Android da plataforma Biblioteca+.
+Aplicativo Android nativo da plataforma BibliotecaPlus — Kotlin + Jetpack Compose.
 
 ## Stack
 
@@ -9,52 +9,123 @@ Aplicativo Android da plataforma Biblioteca+.
 - **Arquitetura**: MVVM + Clean Architecture
 - **DI**: Hilt/Dagger
 - **HTTP**: Retrofit + OkHttp
-- **DB Local**: Room
-- **Persistência**: DataStore
+- **DB Local**: Room (offline-first)
+- **Persistência**: DataStore (token JWT)
 - **Imagens**: Coil
 - **Navegação**: Navigation Compose
 
-## Início Rápido
+---
 
-1. Abrir `mobile/` no **Android Studio**
-2. Aguardar sync do Gradle
-3. Criar `local.properties` com caminho do SDK
-4. Rodar em emulador (Android 8+) ou dispositivo físico
+## Arquitetura Clean
 
-## URL da API (Emulador)
+```mermaid
+graph TB
+    subgraph Presentation ["Camada de Apresentação (UI)"]
+        direction LR
+        Screens["Screens\n(Compose)"]
+        ViewModels["ViewModels\n(StateFlow)"]
+        Screens <--> ViewModels
+    end
 
+    subgraph Domain ["Camada de Domínio"]
+        direction LR
+        UseCases["Use Cases"]
+        Models["Domain Models"]
+        Repos["Repository\nInterfaces"]
+        UseCases --> Models
+        UseCases --> Repos
+    end
+
+    subgraph Data ["Camada de Dados"]
+        direction LR
+        RepoImpl["Repository\nImplementations"]
+        Remote["Remote DataSource\n(Retrofit API)"]
+        Local["Local DataSource\n(Room DB)"]
+        RepoImpl --> Remote
+        RepoImpl --> Local
+    end
+
+    subgraph DI ["Hilt — Injeção de Dependência"]
+        AppModule["AppModule\n(Retrofit · Room · DataStore)"]
+    end
+
+    ViewModels --> UseCases
+    Repos -.->|implementado por| RepoImpl
+    DI --> Presentation
+    DI --> Data
 ```
-http://10.0.2.2:3333/api/v1/
+
+---
+
+## Fluxo de Navegação
+
+```mermaid
+stateDiagram-v2
+    [*] --> SplashCheck
+
+    SplashCheck --> Login : Sem token
+    SplashCheck --> Home : Token válido
+
+    Login --> Home : Login OK
+    Home --> BookList : Catálogo
+    Home --> LoansList : Empréstimos
+    Home --> Profile : Perfil
+    BookList --> BookDetail : Selecionar livro
+    BookDetail --> Home : Reservar / Voltar
+    Profile --> Login : Logout
 ```
 
-O IP `10.0.2.2` aponta para `localhost` do host quando rodando no emulador Android.
+---
 
-## Estrutura
+## Estrutura do Projeto
 
 ```
 app/src/main/java/com/bibliotecaplus/
-├── di/               → Hilt modules
+├── di/                   → Hilt modules (AppModule)
 ├── data/
-│   ├── api/          → Retrofit service + DTOs
-│   ├── local/        → Room DAOs + entities
-│   └── repository/   → Repositories
+│   ├── api/              → Retrofit service + DTOs
+│   ├── local/            → Room DAOs + entities
+│   └── repository/       → Repository implementations
 ├── domain/
-│   ├── model/        → Domain models
-│   └── usecase/      → Use cases
+│   ├── model/            → Domain models
+│   └── usecase/          → Use cases (Business logic)
 └── presentation/
-    ├── navigation/   → NavGraph
-    ├── auth/         → Login screens
-    ├── home/         → Home screen
-    ├── books/        → Book list + detail
-    ├── loans/        → Loans screen
-    └── profile/      → Profile screen
+    ├── navigation/        → AppNavGraph
+    ├── auth/              → LoginScreen + LoginViewModel
+    ├── home/              → HomeScreen + HomeViewModel
+    ├── books/             → BookListScreen · BookDetailScreen
+    ├── loans/             → LoansScreen + LoansViewModel
+    └── profile/           → ProfileScreen + ProfileViewModel
 ```
 
-## Funcionalidades
+---
 
-- ✅ Login com Remember Me
-- ✅ Catálogo de livros (busca + filtro)
-- ✅ Detalhes do livro com reserva
-- ✅ Empréstimos ativos + renovação
-- ✅ Perfil do usuário
-- ✅ Offline-first (Room cache)
+## Início Rápido
+
+```bash
+# 1. Abrir no Android Studio
+# 2. Criar local.properties
+echo "sdk.dir=$HOME/Library/Android/sdk" > local.properties
+
+# 3. Build e deploy automático (detecta IP local)
+chmod +x deploy-android.sh
+./deploy-android.sh
+
+# Ou build manual no Android Studio → Run 'app'
+```
+
+## Deploy com IP local (dispositivo físico)
+
+```bash
+./deploy-android.sh
+# Detecta IP da rede local automaticamente
+# Build APK apontando para http://<IP>:4000/api/v1/
+# Instala via ADB se dispositivo conectado
+```
+
+## URL da API
+
+| Ambiente | URL |
+|----------|-----|
+| Emulador | `http://10.0.2.2:4000/api/v1/` |
+| Dispositivo físico | `http://<IP_LOCAL>:4000/api/v1/` |
