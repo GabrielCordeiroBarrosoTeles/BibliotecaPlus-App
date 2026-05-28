@@ -1,0 +1,69 @@
+[versions]
+agp                  = "8.7.0"
+kotlin               = "2.1.0"
+ksp                  = "2.1.0-1.0.29"
+compose              = "1.7.3"
+ktor                 = "3.0.3"
+koin                 = "4.0.0"
+serialization        = "1.7.3"
+multiplatformSettings = "1.2.0"
+coil3                = "3.0.4"
+coroutines           = "1.9.0"
+datetime             = "0.6.1"
+lifecycleViewmodel   = "2.8.4"
+navigationCompose    = "2.8.0-alpha10"
+# Android-only
+coreKtx              = "1.15.0"
+lifecycleRuntimeKtx  = "2.8.7"
+activityCompose      = "1.9.3"
+junit                = "4.13.2"
+junitAndroid         = "1.2.1"
+espressoCore         = "3.6.1"
+
+[libraries]
+# Coroutines / Serialization
+kotlinx-coroutines-core          = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core",    version.ref = "coroutines" }
+kotlinx-coroutines-android       = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+kotlinx-serialization-json       = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-datetime                 = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",            version.ref = "datetime" }
+# Ktor (HTTP client — KMP)
+ktor-client-core                 = { group = "io.ktor", name = "ktor-client-core",                  version.ref = "ktor" }
+ktor-client-content-negotiation  = { group = "io.ktor", name = "ktor-client-content-negotiation",  version.ref = "ktor" }
+ktor-client-logging              = { group = "io.ktor", name = "ktor-client-logging",               version.ref = "ktor" }
+ktor-serialization-kotlinx-json  = { group = "io.ktor", name = "ktor-serialization-kotlinx-json",  version.ref = "ktor" }
+ktor-client-okhttp               = { group = "io.ktor", name = "ktor-client-okhttp",                version.ref = "ktor" }
+ktor-client-darwin               = { group = "io.ktor", name = "ktor-client-darwin",                version.ref = "ktor" }
+# Koin (DI — KMP)
+koin-core                        = { group = "io.insert-koin", name = "koin-core",             version.ref = "koin" }
+koin-android                     = { group = "io.insert-koin", name = "koin-android",           version.ref = "koin" }
+koin-compose                     = { group = "io.insert-koin", name = "koin-compose",           version.ref = "koin" }
+koin-compose-viewmodel           = { group = "io.insert-koin", name = "koin-compose-viewmodel", version.ref = "koin" }
+# Multiplatform Settings (DataStore replacement — KMP)
+multiplatform-settings           = { group = "com.russhwolf", name = "multiplatform-settings",       version.ref = "multiplatformSettings" }
+multiplatform-settings-no-arg    = { group = "com.russhwolf", name = "multiplatform-settings-no-arg", version.ref = "multiplatformSettings" }
+# Coil 3 (image loading — KMP)
+coil3-compose                    = { group = "io.coil-kt.coil3", name = "coil-compose",       version.ref = "coil3" }
+coil3-network-ktor               = { group = "io.coil-kt.coil3", name = "coil-network-ktor3", version.ref = "coil3" }
+# JetBrains Lifecycle ViewModel (KMP)
+lifecycle-viewmodel              = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel",         version.ref = "lifecycleViewmodel" }
+lifecycle-viewmodel-compose      = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodel" }
+# JetBrains Navigation Compose (KMP)
+navigation-compose               = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+# Android-only
+androidx-core-ktx                = { group = "androidx.core",          name = "core-ktx",             version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx   = { group = "androidx.lifecycle",     name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose        = { group = "androidx.activity",      name = "activity-compose",      version.ref = "activityCompose" }
+# Tests
+junit                            = { group = "junit",                  name = "junit",                 version.ref = "junit" }
+androidx-junit                   = { group = "androidx.test.ext",      name = "junit",                 version.ref = "junitAndroid" }
+androidx-espresso-core           = { group = "androidx.test.espresso", name = "espresso-core",         version.ref = "espressoCore" }
+
+[plugins]
+android-application     = { id = "com.android.application",                        version.ref = "agp" }
+android-library         = { id = "com.android.library",                            version.ref = "agp" }
+kotlin-multiplatform    = { id = "org.jetbrains.kotlin.multiplatform",             version.ref = "kotlin" }
+kotlin-android          = { id = "org.jetbrains.kotlin.android",                   version.ref = "kotlin" }
+kotlin-compose          = { id = "org.jetbrains.kotlin.plugin.compose",            version.ref = "kotlin" }
+kotlin-serialization    = { id = "org.jetbrains.kotlin.plugin.serialization",      version.ref = "kotlin" }
+compose-multiplatform   = { id = "org.jetbrains.compose",                          version.ref = "compose" }
+ksp                     = { id = "com.google.devtools.ksp",                        version.ref = "ksp" }

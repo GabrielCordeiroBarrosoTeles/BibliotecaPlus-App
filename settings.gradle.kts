@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "BibliotecaPlus"
-include(":app")
+include(":app", ":shared")

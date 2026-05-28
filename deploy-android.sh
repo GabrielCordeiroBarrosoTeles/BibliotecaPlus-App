@@ -15,10 +15,11 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 # ─── Config ───────────────────────────────────────────────────────────────────
-API_PORT="${API_PORT:-4000}"
+API_PORT="${API_PORT:-3333}"
 BUILD_TYPE="${BUILD_TYPE:-debug}"           # debug | release
-APP_DIR="$(cd "$(dirname "$0")/app" && pwd)"
-GRADLE_WRAPPER="$APP_DIR/gradlew"
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+APP_DIR="$PROJECT_DIR/app"
+GRADLE_WRAPPER="$PROJECT_DIR/gradlew"
 
 # ─── Detectar IP local ────────────────────────────────────────────────────────
 detect_local_ip() {
@@ -73,7 +74,8 @@ if [[ ! -f "$GRADLE_WRAPPER" ]]; then
 fi
 
 # ─── Detectar IP ──────────────────────────────────────────────────────────────
-LOCAL_IP=$(detect_local_ip)
+# Usa LOCAL_IP do ambiente se já fornecido, senão detecta automaticamente
+LOCAL_IP="${LOCAL_IP:-$(detect_local_ip)}"
 
 if [[ -z "$LOCAL_IP" ]]; then
   echo -e "${RED}[ERRO] Não foi possível detectar o IP local.${NC}"
@@ -114,7 +116,7 @@ echo ""
 echo -e "${CYAN}[~]${NC} Iniciando Gradle build (${BUILD_TYPE})..."
 echo ""
 
-cd "$APP_DIR"
+cd "$PROJECT_DIR"
 chmod +x gradlew
 
 TASK="assemble$(tr '[:lower:]' '[:upper:]' <<< "${BUILD_TYPE:0:1}")${BUILD_TYPE:1}"
@@ -128,7 +130,7 @@ TASK="assemble$(tr '[:lower:]' '[:upper:]' <<< "${BUILD_TYPE:0:1}")${BUILD_TYPE:
 ./gradlew "$TASK" -PbaseUrl="$BASE_URL" --quiet
 
 # ─── Localizar APK gerado ─────────────────────────────────────────────────────
-APK_PATH=$(find "$APP_DIR/app/build/outputs/apk/${BUILD_TYPE}" \
+APK_PATH=$(find "$APP_DIR/build/outputs/apk/${BUILD_TYPE}" \
            -name "*.apk" 2>/dev/null | head -1)
 
 echo ""
